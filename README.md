@@ -95,16 +95,16 @@ All game content lives in three JSON files in `src/data/`, so it can change with
 - `route`: `from` and `to`, each a big `place` ("HOME", "ESCAPE") with a small `note` under it, joined by `symbol` on the dotted line.
 - `details`: the label and value boxes, shown two per row. Edit the `value`s for the real date, check-in time, duration and destination. You can also rename, add or remove boxes, but keep at least one and an even count so the grid stays full.
 - `code`: the strip along the bottom.
-- `calendarInvite`: settings for the automatic Google Calendar invitation. `guestEmail` is currently `Krenntc@gmail.com`. Fill `start` and `end` with ISO timestamps that include the UTC offset, such as `2026-12-01T15:00:00+08:00`, and put the deployed Apps Script `/exec` URL in `webAppUrl`.
+- `calendarInvite`: settings for the automatic Google Calendar invitation. The email goes to whichever invited Google account is signed in. `start` and `end` are ISO timestamps with a UTC offset, `location` is the full Calendar address, and `webAppUrl` is the deployed Apps Script `/exec` URL.
 
 To enable the Calendar invitation:
 
 1. Open [Google Apps Script](https://script.google.com/) while signed into the Google account whose calendar should own the event.
 2. Create a project and paste [`tools/google-calendar-invite.gs`](./tools/google-calendar-invite.gs) into `Code.gs`.
 3. Choose **Deploy → New deployment → Web app**, set **Execute as** to **Me** and **Who has access** to **Anyone**, then authorize Calendar and Gmail access. After any later edit to the script, use **Deploy → Manage deployments → Edit → Version: New version** so the same `/exec` URL runs the new code.
-4. Copy the deployment's `/exec` URL into `calendarInvite.webAppUrl`, and fill its `start` and `end`.
+4. Copy the deployment's `/exec` URL into `calendarInvite.webAppUrl`, then fill its `start`, `end` and `location`.
 
-Pressing "Accept this adventure" then creates the event once and asks Google Calendar to email the guest. Google never emails an event's own organizer, so if the guest is the account the script runs as, the script sends a styled staycation-pass email instead. To test without the game, choose `sendSample` in the editor's function menu and click **Run**. Repeated taps for the same guest and start time do not create duplicates. The celebration does not wait for Google. Empty placeholders disable the request, so local testing remains safe.
+Pressing "Accept this adventure" creates one event for that date and sends the styled invitation to the Google account that is signed in. Accepting again on the same date keeps that event and sends the email to the signed-in account again. To test without the game, choose `sendSample` in the editor's function menu and click **Run**. The celebration does not wait for Google. Empty placeholders disable the request, so local testing remains safe.
 
 [`levels.json`](./src/data/levels.json) holds everything else:
 
@@ -334,7 +334,8 @@ The intro has to feel instant on a mid-range phone, so the 3D scene follows thes
 ## Before launch
 
 - [x] Add the real photo (`public/couple-photobooth.jpg`)
-- [ ] Set the real staycation date, check-in time, duration and destination in `src/data/staycation-pass.json`
-- [x] Deploy the latest `tools/google-calendar-invite.gs` version
-- [ ] Deploy (Vercel or Netlify), create a short URL and generate the QR card
+- [x] Set the real staycation date, check-in time, duration, destination and address in `src/data/staycation-pass.json`
+- [ ] Deploy the latest `tools/google-calendar-invite.gs` version
+- [x] Deploy to Vercel at `guen-quest.vercel.app`
+- [ ] Generate the QR card
 - [x] Test on her phone model, on mobile data, and by scanning the printed QR

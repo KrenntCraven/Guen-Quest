@@ -44,10 +44,6 @@ check(
 )
 
 check(pass.details.length > 0, 'staycation-pass.json needs at least one entry in "details".')
-check(
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(pass.calendarInvite.guestEmail),
-  `staycation-pass.json "calendarInvite.guestEmail" needs an email address (found "${pass.calendarInvite.guestEmail}").`,
-)
 const { webAppUrl, start: startText, end: endText } = pass.calendarInvite
 if (webAppUrl) {
   check(

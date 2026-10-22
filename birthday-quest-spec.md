@@ -136,7 +136,7 @@ The emotional peak, about 2.5 seconds of choreography:
 - An "Accept this adventure" button. Once configured, accepting creates the staycation event through Google Apps Script and Google Calendar emails the guest invitation.
 - **On accept:** the choice is saved and the screen becomes "Reservation accepted" / "Level 25 complete." / "See you there.", framed by the intro's wisteria, bellflower and petals. The invite shows this accepted state from then on.
 - **Its entrance:** the bunny's badge pops up, the lily twirls in with a small ring of hearts, "Reservation accepted" lands like a ticket stamp, the headline rises word by word, then the bunny hops once. With reduced motion it simply appears.
-- **The Calendar invitation:** sent through a Google Apps Script web app when she accepts, without delaying the screen. The script owns the event, restricts it to `Krenntc@gmail.com` and prevents duplicates for the same start time.
+- **The Calendar invitation:** sent through a Google Apps Script web app when she accepts, without delaying the screen. The script owns the event, accepts only the two signed-in Google accounts, keeps one event for the same start time, and emails whichever account accepted.
 
 ---
 
@@ -201,17 +201,17 @@ Content lives in three JSON files in `src/data/`, so it can be edited without to
     "to": { "place": "ESCAPE", "note": "Just us" }
   },
   "details": [
-    { "label": "Date", "value": "2026-00-00" },
-    { "label": "Check-in", "value": "15:00" },
-    { "label": "Duration", "value": "2 days" },
-    { "label": "Destination", "value": "Our staycation destination" }
+    { "label": "Date", "value": "Oct 23–24, 2026" },
+    { "label": "Check-in", "value": "3:00 PM" },
+    { "label": "Duration", "value": "1 night · 2 days" },
+    { "label": "Destination", "value": "Bahay Hayahay Tanay" }
   ],
   "code": "2 5 ♥ G U E N ♥ 2 5",
   "calendarInvite": {
-    "webAppUrl": "",
-    "guestEmail": "Krenntc@gmail.com",
-    "start": "",
-    "end": ""
+    "webAppUrl": "https://script.google.com/macros/s/…/exec",
+    "start": "2026-10-23T15:00:00+08:00",
+    "end": "2026-10-24T12:00:00+08:00",
+    "location": "Sitio Manggahan, Barangay Daraitan, Tanay, Rizal, 1980"
   }
 }
 ```

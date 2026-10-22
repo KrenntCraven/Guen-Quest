@@ -33,10 +33,11 @@ export type StaycationPass = {
   /** Automatic Google Calendar invitation sent through the deployed Apps Script endpoint. */
   calendarInvite: {
     webAppUrl: string
-    guestEmail: string
     /** ISO 8601 with an explicit offset, for example 2026-12-01T15:00:00+08:00. */
     start: string
     end: string
+    /** Full address used for the Google Calendar location and invitation email. */
+    location: string
   }
 }
 

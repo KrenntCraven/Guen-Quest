@@ -11,9 +11,10 @@
  * After editing this file, update the existing deployment (Deploy > Manage deployments > Edit > Version: New version)
  * so the /exec URL keeps working with the new code.
  *
- * This endpoint deliberately accepts only the guest below and creates only one event for a given start time.
+ * This endpoint accepts only the signed-in accounts below and keeps one event for a given start time.
+ * Accepting sends the invitation email to that signed-in account, including a repeat on the same date.
  */
-const ALLOWED_GUEST = 'Krenntc@gmail.com'
+const ALLOWED_GUESTS = ['krenntc@gmail.com', 'guenyli8@gmail.com']
 const EVENT_TITLE = 'Level 25 Staycation'
 const TIME_ZONE = 'Asia/Manila'
 const EMAIL_SUBJECT = "You're invited ♥"
@@ -50,6 +51,15 @@ function formatTime(date) {
 }
 
 function formatDuration(start, end) {
+  if (formatDate(start) !== formatDate(end)) {
+    const dateParts = (date) => Utilities.formatDate(date, TIME_ZONE, 'yyyy-M-d').split('-').map(Number)
+    const [startYear, startMonth, startDay] = dateParts(start)
+    const [endYear, endMonth, endDay] = dateParts(end)
+    const nights = Math.round(
+      (Date.UTC(endYear, endMonth - 1, endDay) - Date.UTC(startYear, startMonth - 1, startDay)) / 86400000,
+    )
+    return `${nights} ${nights === 1 ? 'night' : 'nights'} · ${nights + 1} days`
+  }
   const minutes = Math.round((end.getTime() - start.getTime()) / 60000)
   const days = Math.floor(minutes / 1440)
   const hours = Math.floor((minutes % 1440) / 60)
@@ -60,7 +70,7 @@ function formatDuration(start, end) {
   return parts.join(' ')
 }
 
-function invitationDetails(start, end, destination) {
+function invitationDetails(start, end, destination, location) {
   const place = destination || 'To be announced'
   const sameDay = formatDate(start) === formatDate(end)
   const when = sameDay
@@ -68,6 +78,7 @@ function invitationDetails(start, end, destination) {
     : `${formatDate(start)} at ${formatTime(start)} to ${formatDate(end)} at ${formatTime(end)}`
   return {
     place,
+    location: location || place,
     when,
     date: sameDay ? formatDate(start) : `${formatDate(start)} – ${formatDate(end)}`,
     checkIn: formatTime(start),
@@ -85,6 +96,7 @@ function cell(label, value) {
 
 function invitationHtml(details) {
   const place = escapeHtml(details.place)
+  const location = escapeHtml(details.location)
   return `<!DOCTYPE html>
 <html>
 <body style="margin:0;padding:0;background:#faf7ff;">
@@ -135,6 +147,9 @@ function invitationHtml(details) {
             <td align="center" style="padding:14px 16px;background:#f3eefb;border-top:2px dashed #ebe3f7;color:#6b4fb0;font-family:'Courier New',Courier,monospace;font-size:13px;letter-spacing:0.28em;">${escapeHtml(PASS.code)}</td>
           </tr>
         </table>
+        <p style="max-width:420px;margin:18px auto 0;color:#6f647f;font-size:13px;line-height:1.55;">
+          <strong style="color:#3d2a6e;">${place}</strong><br>${location}
+        </p>
         <table role="presentation" cellpadding="0" cellspacing="0" style="margin-top:22px;">
           <tr>
             <td align="center" style="background:#6b4fb0;border-radius:999px;">
@@ -159,6 +174,7 @@ function calendarDescription(details) {
     `Check-in: ${details.checkIn}`,
     `Duration: ${details.duration}`,
     `Destination: ${details.place}`,
+    `Address: ${details.location}`,
     '',
     PASS.note,
     '',
@@ -178,22 +194,27 @@ function findEvent(eventId) {
   }
 }
 
-/** Writes the staycation pass into the event. The owner is not added as a guest, since Google would list them as awaiting. */
+function hasGuest(event, guest) {
+  return event.getGuestList().some((person) => person.getEmail().toLowerCase() === guest.toLowerCase())
+}
+
+/** Writes the staycation pass into the event and adds the signed-in guest. The owner is never a guest. */
 function restyleEvent(event, details, guest) {
   event.setTitle(EVENT_TITLE)
   event.setDescription(calendarDescription(details))
-  event.setLocation(details.place)
+  event.setLocation(details.location)
   event.setColor(CalendarApp.EventColor.MAUVE)
-  if (!isOwner(guest)) return
-  event.getGuestList().forEach((person) => {
-    if (person.getEmail().toLowerCase() === guest.toLowerCase()) event.removeGuest(guest)
-  })
+  if (isOwner(guest)) {
+    if (hasGuest(event, guest)) event.removeGuest(guest)
+    return
+  }
+  if (!hasGuest(event, guest)) event.addGuest(guest)
 }
 
 function createCalendarEvent(guest, start, end, details) {
   const options = {
     description: calendarDescription(details),
-    location: details.place,
+    location: details.location,
   }
   if (!isOwner(guest)) {
     options.guests = guest
@@ -217,6 +238,7 @@ function invitationText(details) {
     `Check-in: ${details.checkIn}`,
     `Duration: ${details.duration}`,
     `Destination: ${details.place}`,
+    `Address: ${details.location}`,
     '',
     PASS.code,
     '',
@@ -224,14 +246,9 @@ function invitationText(details) {
   ].join('\n')
 }
 
-/**
- * Google never emails an event's own organizer, so when the guest is this script's own account the invitation
- * arrives as this styled email instead.
- */
-function emailOwnerCopy(guest, start, end, destination) {
-  const owner = Session.getEffectiveUser().getEmail()
-  if (owner.toLowerCase() !== guest.toLowerCase()) return false
-  const details = invitationDetails(start, end, destination)
+/** Sends the styled invitation to the signed-in account. Google will not email an event's own organizer. */
+function sendInvitation(guest, start, end, destination, location) {
+  const details = invitationDetails(start, end, destination, location)
   MailApp.sendEmail({
     to: guest,
     name: EMAIL_FROM,
@@ -247,28 +264,25 @@ function createInvite(data) {
   const start = new Date(data.start)
   const end = new Date(data.end)
   const destination = String(data.destination || '')
+  const location = String(data.location || destination)
 
-  if (guest.toLowerCase() !== ALLOWED_GUEST.toLowerCase()) return { ok: false, error: 'Guest is not allowed.' }
+  if (!ALLOWED_GUESTS.includes(guest.toLowerCase())) return { ok: false, error: 'Guest is not allowed.' }
   if (isNaN(start.getTime()) || isNaN(end.getTime()) || end <= start) return { ok: false, error: 'Invalid event timing.' }
 
-  const details = invitationDetails(start, end, destination)
-  const key = `birthday-invite:${guest.toLowerCase()}:${start.toISOString()}`
-  const ownerEmailKey = `${key}:owner-email`
+  const details = invitationDetails(start, end, destination, location)
+  const key = `birthday-invite:${start.toISOString()}`
   const properties = PropertiesService.getScriptProperties()
   const existingEventId = properties.getProperty(key)
   const existingEvent = existingEventId && findEvent(existingEventId)
   if (existingEvent) {
     restyleEvent(existingEvent, details, guest)
-    const emailSent =
-      properties.getProperty(ownerEmailKey) === 'sent' || emailOwnerCopy(guest, start, end, destination)
-    if (emailSent) properties.setProperty(ownerEmailKey, 'sent')
+    const emailSent = sendInvitation(guest, start, end, destination, location)
     return { ok: true, duplicate: true, emailSent, eventId: existingEventId }
   }
 
   const calendarEvent = createCalendarEvent(guest, start, end, details)
   properties.setProperty(key, calendarEvent.getId())
-  const emailSent = emailOwnerCopy(guest, start, end, destination)
-  if (emailSent) properties.setProperty(ownerEmailKey, 'sent')
+  const emailSent = sendInvitation(guest, start, end, destination, location)
   return { ok: true, emailSent, eventId: calendarEvent.getId() }
 }
 
@@ -284,13 +298,14 @@ function doPost(event) {
   }
 }
 
-/** Run this from the editor to preview the styled email for the Oct 20 test slot. It does not create a calendar event. */
+/** Run this from the editor to preview the styled email for the real staycation. It does not create a calendar event. */
 function previewEmail() {
-  const sent = emailOwnerCopy(
-    ALLOWED_GUEST,
-    new Date('2026-10-20T15:00:00+08:00'),
-    new Date('2026-10-20T17:00:00+08:00'),
-    'Our staycation destination',
+  const sent = sendInvitation(
+    ALLOWED_GUESTS[0],
+    new Date('2026-10-23T15:00:00+08:00'),
+    new Date('2026-10-24T12:00:00+08:00'),
+    'Bahay Hayahay Tanay',
+    'Sitio Manggahan, Barangay Daraitan, Tanay, Rizal, 1980',
   )
   Logger.log(sent ? 'Preview sent.' : 'Preview was not sent. The script account must be the guest.')
 }
@@ -300,10 +315,11 @@ function sendSample() {
   const start = new Date(Date.now() + 24 * 60 * 60 * 1000)
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000)
   const result = createInvite({
-    guestEmail: ALLOWED_GUEST,
+    guestEmail: ALLOWED_GUESTS[0],
     start: start.toISOString(),
     end: end.toISOString(),
     destination: 'SAMPLE: Birthday Quest calendar test',
+    location: 'Sample staycation address',
   })
   Logger.log(JSON.stringify(result))
 }
