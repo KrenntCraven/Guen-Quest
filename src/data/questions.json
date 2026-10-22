@@ -1,0 +1,95 @@
+{
+  "1": [
+    {
+      "text": "Where did we have our first date?",
+      "timeLimit": 20,
+      "options": ["BGC, Taguig", "Intramuros, Manila", "Manila Ocean Park", "SM Mall of Asia"],
+      "correctIndex": 1,
+      "memory": "Intramuros. Still one of my favorite days."
+    }
+  ],
+  "2": [
+    {
+      "text": "Who sent the first message?",
+      "timeLimit": 20,
+      "options": ["Krennt", "Guen", "Cupid", "Neither, it was fate"],
+      "correctIndex": 1,
+      "memory": "You did. I'm glad you made the first move."
+    }
+  ],
+  "3": [
+    {
+      "text": "Which color do we both love?",
+      "timeLimit": 20,
+      "options": ["Violet", "Black", "Blue", "Red"],
+      "correctIndex": 0,
+      "memory": "Violet. One of the few things we never had to negotiate."
+    }
+  ],
+  "4": [
+    {
+      "text": "What was the first movie we watched together in the cinema?",
+      "timeLimit": 20,
+      "options": ["Spider-Man: No Way Home", "Avengers: Endgame", "Black Panther", "Doctor Strange"],
+      "correctIndex": 1,
+      "memory": "Endgame. Three hours in a dark room, and I liked it more because you were there."
+    }
+  ],
+  "5": [
+    {
+      "text": "What is our favorite TV series of all time?",
+      "timeLimit": 20,
+      "options": ["Better Call Saul", "Stranger Things", "Breaking Bad", "Money Heist"],
+      "correctIndex": 2,
+      "memory": "Breaking Bad. Good taste, shared."
+    }
+  ],
+  "6": [
+    {
+      "text": "Who usually chooses what we watch?",
+      "timeLimit": 20,
+      "options": ["Guen", "Krennt", "We take turns", "The algorithm"],
+      "correctIndex": 1,
+      "memory": "Me, usually. Thanks for putting up with my picks."
+    }
+  ],
+  "7": [
+    {
+     "text": "Who falls asleep first during a movie?",
+  "timeLimit": 20,
+  "options": [
+    "Guen",
+    "Krennt",
+    "We take turns",
+    "Neither, we always make it to the credits"
+  ],
+  "correctIndex": 0,
+  "memory": "Guen, usually before the second act. I'll always tell you how it ended."}
+  ],
+  "8": [
+    {
+      "text": "Which artist do we both love?",
+      "timeLimit": 20,
+      "options": ["Ariana Grande", "Bruno Mars", "The Weeknd", "Taylor Swift"],
+      "correctIndex": 2,
+      "memory": "The Weeknd. A few of those songs are ours now."
+    }
+  ],
+  "9": [
+    {
+      "text": "What is Krennt's favorite dish?",
+      "timeLimit": 20,
+      "options": ["Sinigang", "Adobo", "Kare-Kare", "Chicken Inasal"],
+      "correctIndex": 1,
+      "memory": "Adobo. An easy one, I hope."
+    },
+    {
+      "text": "Ready for the next chapter?",
+      "timeLimit": 20,
+      "options": ["Yes", "Yes, obviously", "Absolutely", "Always"],
+      "correctIndex": 0,
+      "anyCorrect": true,
+      "memory": "Good. There's one more thing."
+    }
+  ]
+}

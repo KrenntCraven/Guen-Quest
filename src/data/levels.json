@@ -1,0 +1,59 @@
+{
+  "photo": "/couple-photobooth.jpg",
+  "levels": [
+    {
+      "id": 1,
+      "title": "Where it began",
+      "passMin": 1,
+      "tileIndex": 0
+    },
+    {
+      "id": 2,
+      "title": "The first message",
+      "passMin": 1,
+      "tileIndex": 1
+    },
+    {
+      "id": 3,
+      "title": "Our color",
+      "passMin": 1,
+      "tileIndex": 2
+    },
+    {
+      "id": 4,
+      "title": "Movie memories",
+      "passMin": 1,
+      "tileIndex": 3
+    },
+    {
+      "id": 5,
+      "title": "Binge-worthy",
+      "passMin": 1,
+      "tileIndex": 4
+    },
+    {
+      "id": 6,
+      "title": "Movie night",
+      "passMin": 1,
+      "tileIndex": 5
+    },
+    {
+      "id": 7,
+      "title": "Sleepy credits",
+      "passMin": 1,
+      "tileIndex": 6
+    },
+    {
+      "id": 8,
+      "title": "Our soundtrack",
+      "passMin": 1,
+      "tileIndex": 8
+    },
+    {
+      "id": 9,
+      "title": "The heart level",
+      "passMin": 2,
+      "tileIndex": 7
+    }
+  ]
+}

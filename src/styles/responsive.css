@@ -1,0 +1,531 @@
+/* ---------- Responsive ---------- */
+/* Mobile first: the rules above are the phone layout. Breakpoints below follow the device, not arbitrary widths:
+   narrow phones (≤380px), short portrait phones, portrait tablets (≥600px), landscape (≥560px wide),
+   short landscape phones (≤540px tall), desktop (≥1024px) and wide monitors (≥1440px). */
+
+@media (max-width: 380px) {
+  .map-screen,
+  .quiz-screen {
+    --pad-x: 0.9rem;
+  }
+
+  .game-header {
+    gap: 0.6rem;
+  }
+
+  .game-header h1 {
+    font-size: clamp(2rem, 10.5vw, 2.4rem);
+    white-space: nowrap;
+  }
+
+  .score-chip {
+    min-width: 0;
+    padding-inline: 0.75rem;
+  }
+
+  .photo-card {
+    padding: 1rem;
+  }
+
+  .level-section {
+    padding: 1rem 0.6rem 1.25rem;
+  }
+
+  .question-card {
+    padding-inline: 1.15rem;
+  }
+
+  .answer {
+    padding: 0.8rem;
+    font-size: 0.92rem;
+  }
+
+  .node-info strong {
+    font-size: 0.9rem;
+  }
+
+  .ticket-top {
+    padding-inline: 1rem;
+    letter-spacing: 0.06em;
+  }
+
+  .ticket-route,
+  .ticket-grid {
+    padding-inline: 1.1rem;
+  }
+}
+
+/* Short portrait phones (iPhone SE and similar): tighten the quiz so answers and feedback fit on one screen. */
+@media (orientation: portrait) and (max-height: 667px) {
+  .quiz-screen {
+    --feedback-room: 7rem;
+
+    padding-top: max(0.9rem, env(safe-area-inset-top));
+  }
+
+  .quiz-header {
+    margin-bottom: 0.8rem;
+  }
+
+  .question-card {
+    min-height: clamp(8rem, 24svh, 22rem);
+    margin: 1rem 0 0.75rem;
+    padding-block: 1.25rem 1.75rem;
+  }
+
+  .question-card .eyebrow {
+    margin-bottom: 0.4rem;
+  }
+
+  .answer-grid {
+    margin-top: 1.1rem;
+    gap: 0.6rem;
+  }
+
+  .answer {
+    gap: 0.4rem;
+  }
+
+  .answer-shape {
+    width: 30px;
+    height: 30px;
+  }
+
+  .centered-screen {
+    padding-block: max(1.5rem, env(safe-area-inset-top)) max(1.5rem, env(safe-area-inset-bottom));
+  }
+
+  .story-badge {
+    width: 88px;
+    height: 88px;
+    margin-bottom: 1rem;
+  }
+
+  .story-badge__bunny svg {
+    width: 46px;
+    height: auto;
+  }
+
+  .result-stars {
+    margin: 0.9rem 0 0.8rem;
+  }
+
+  .result-stars .star {
+    font-size: 2.2rem;
+  }
+
+  .result-stars .star:nth-child(2) {
+    font-size: 2.6rem;
+  }
+}
+
+/* Portrait tablets: a slightly wider single column with more air. */
+@media (orientation: portrait) and (min-width: 600px) {
+  .map-layout {
+    width: min(100%, 40rem);
+  }
+}
+
+@media (min-width: 768px) {
+  .quiz-screen {
+    --pad-x: 2rem;
+
+    align-items: center;
+    justify-content: center;
+    padding-top: 2.5rem;
+  }
+
+  .quiz-header,
+  .timer-track,
+  .question-card,
+  .answer-grid {
+    width: min(100%, 48rem);
+  }
+
+  .centered-screen,
+  .invite-screen {
+    --pad-x: 2rem;
+
+    padding-block: max(3rem, env(safe-area-inset-top)) max(3rem, env(safe-area-inset-bottom));
+  }
+
+  .centered-screen h1 {
+    font-size: clamp(3rem, 5vw, 4rem);
+  }
+}
+
+@media (min-width: 768px) and (min-height: 700px) {
+  .answer {
+    padding: 1.15rem;
+    font-size: 1.1rem;
+  }
+
+  .answer-shape {
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+/* Landscape: results, finale and invite mirror the intro, with the story on the left and the picture on the right. */
+@media (orientation: landscape) and (min-width: 560px) {
+  .story-split {
+    display: grid;
+    grid-template-areas:
+      "top media"
+      "bottom media";
+    grid-template-columns: minmax(0, 26rem) auto;
+    align-content: center;
+    justify-content: center;
+    column-gap: clamp(2rem, 7vw, 6rem);
+    text-align: left;
+  }
+
+  .story-split .split-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .story-split__top {
+    grid-area: top;
+    align-self: end;
+  }
+
+  .story-split__media {
+    grid-area: media;
+    align-self: center;
+  }
+
+  .story-split__bottom {
+    grid-area: bottom;
+    align-self: start;
+  }
+
+  .story-split p {
+    max-width: 24rem;
+  }
+
+  .story-split .primary-button {
+    width: min(100%, 22rem);
+  }
+
+  .finale-screen.story-split {
+    gap: 0;
+  }
+
+  .result-screen .story-split__media {
+    width: min(22rem, calc(100svh - 9.5rem), 40vw);
+    align-items: stretch;
+  }
+
+  .story-split .result-photo,
+  .story-split .result-stats {
+    width: 100%;
+  }
+
+  .story-split .result-photo {
+    margin-bottom: 1rem;
+  }
+
+  .finale-media {
+    width: min(28rem, calc((100svh - 6rem) * 4 / 3), 44vw);
+    margin: 0;
+  }
+
+  .story-split .finale-cta {
+    width: min(100%, 22rem);
+  }
+
+  .invite-screen header {
+    width: auto;
+    margin-bottom: 0;
+    text-align: left;
+  }
+
+  .invite-screen header p {
+    margin: 0.75rem 0 0;
+  }
+
+  .invite-screen .ticket {
+    width: min(30rem, 48vw);
+    margin-bottom: 0;
+  }
+
+  .invite-screen .story-split__bottom {
+    margin-top: 1.75rem;
+  }
+
+  .invite-note {
+    width: min(100%, 22rem);
+    text-align: left;
+  }
+}
+
+/* Landscape tablets and desktop: photo and final surprise stay in view beside the winding path. */
+@media (min-width: 1024px), (orientation: landscape) and (min-width: 768px) {
+  .map-screen {
+    --pad-x: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  .map-layout {
+    display: grid;
+    width: min(100%, 68rem);
+    grid-template-areas:
+      "header header"
+      "aside path"
+      "reset reset";
+    grid-template-columns: minmax(15rem, 0.9fr) minmax(22rem, 1.1fr);
+    column-gap: clamp(1.25rem, 3vw, 2rem);
+    align-items: start;
+  }
+
+  .game-header {
+    grid-area: header;
+    margin-bottom: 1.25rem;
+  }
+
+  .game-header h1 {
+    font-size: clamp(2.6rem, 4vw, 3.8rem);
+  }
+
+  .map-aside {
+    position: sticky;
+    top: 1.5rem;
+    display: flex;
+    grid-area: aside;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .photo-card {
+    margin-bottom: 0;
+    padding: 1.5rem;
+  }
+
+  .photo-card .photo-grid {
+    width: min(100%, calc((100svh - 10rem) * 4 / 3));
+    margin-inline: auto;
+  }
+
+  .level-section {
+    grid-area: path;
+    padding: 1.5rem 1.75rem 1.75rem;
+  }
+
+  .map-layout .finale-button {
+    margin-top: 0;
+  }
+
+  .map-layout > .text-button {
+    grid-area: reset;
+  }
+}
+
+/* Short landscape phones: the quiz splits into question and answers side by side so nothing needs scrolling. */
+@media (orientation: landscape) and (max-height: 540px) {
+  .quiz-screen {
+    display: grid;
+    padding-block: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-bottom));
+    grid-template-areas:
+      "header header"
+      "timer timer"
+      "card answers";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto minmax(0, 1fr);
+    align-items: stretch;
+    justify-content: stretch;
+    column-gap: 1rem;
+  }
+
+  .quiz-header,
+  .timer-track,
+  .question-card,
+  .answer-grid {
+    width: auto;
+  }
+
+  .quiz-header {
+    grid-area: header;
+    margin-bottom: 0.6rem;
+  }
+
+  .timer-track {
+    grid-area: timer;
+  }
+
+  .question-card {
+    grid-area: card;
+    min-height: 0;
+    margin: 0.75rem 0 0;
+    padding: 1rem 1.25rem 3.75rem;
+  }
+
+  .question-card .eyebrow {
+    margin-bottom: 0.4rem;
+  }
+
+  .question-card h1 {
+    font-size: clamp(1.25rem, 3.4vw, 1.75rem);
+  }
+
+  .timer-number {
+    bottom: 0.75rem;
+  }
+
+  .answer-grid {
+    grid-area: answers;
+    margin-top: 0.75rem;
+    grid-template-rows: 1fr 1fr;
+    gap: 0.6rem;
+  }
+
+  .answer {
+    min-height: 0;
+    padding: 0.75rem;
+    font-size: 0.95rem;
+  }
+
+  .answer-shape {
+    width: 30px;
+    height: 30px;
+  }
+
+  /* Feedback covers the answered question, never the answers. */
+  .feedback-anchor {
+    right: 50%;
+    padding-right: 0.5rem;
+  }
+
+  .map-aside {
+    position: static;
+  }
+
+  .centered-screen,
+  .invite-screen {
+    padding-block: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .centered-screen h1,
+  .invite-screen h1 {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+  }
+
+  .story-badge {
+    width: 72px;
+    height: 72px;
+    margin-bottom: 0.5rem;
+  }
+
+  .centered-screen .eyebrow {
+    margin-bottom: 0.35rem;
+  }
+
+  .centered-screen h1 {
+    margin-bottom: 0.4rem;
+  }
+
+  .result-stats strong {
+    font-size: 1.3rem;
+  }
+
+  .story-badge__bunny {
+    margin-top: 4px;
+  }
+
+  .story-badge__bunny svg {
+    width: 40px;
+    height: auto;
+  }
+
+  .story-badge__lily {
+    width: 32px;
+    height: 32px;
+  }
+
+  .story-badge__lily svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .result-stars {
+    margin: 0.5rem 0 0;
+  }
+
+  .result-stars .star {
+    font-size: 1.9rem;
+  }
+
+  .result-stars .star:nth-child(2) {
+    font-size: 2.2rem;
+  }
+
+  .result-screen .primary-button,
+  .finale-cta {
+    margin-top: 1rem;
+  }
+
+  .finale-stars {
+    margin-bottom: 0.4rem;
+  }
+
+  .finale-stars .star {
+    font-size: 1.5rem;
+  }
+
+  .finale-stars .star:nth-child(2) {
+    font-size: 1.8rem;
+  }
+
+  .centered-screen p {
+    max-width: 34rem;
+  }
+
+  .result-stats div {
+    padding-block: 0.6rem;
+  }
+
+  .invite-screen .story-split__bottom {
+    margin-top: 1rem;
+  }
+
+  .ticket-top {
+    padding-block: 0.7rem;
+  }
+
+  .ticket-route {
+    height: 60px;
+  }
+
+  .ticket-route strong {
+    font-size: 1.25rem;
+  }
+
+  .ticket-grid {
+    padding-block: 1rem;
+    gap: 0.75rem 1rem;
+  }
+
+  .ticket-code {
+    padding: 0.6rem;
+  }
+}
+
+/* Wide monitors: give the map and quiz a little more presence instead of a small island in the middle. */
+@media (min-width: 1440px) and (min-height: 860px) {
+  .map-layout {
+    width: min(100%, 74rem);
+  }
+
+  .quiz-header,
+  .timer-track,
+  .question-card,
+  .answer-grid {
+    width: min(100%, 56rem);
+  }
+
+  .question-card h1 {
+    max-width: 46rem;
+    font-size: clamp(2.6rem, 2.6vw, 3.2rem);
+  }
+}

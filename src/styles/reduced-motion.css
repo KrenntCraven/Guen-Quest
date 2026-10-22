@@ -1,0 +1,22 @@
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-delay: 0ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .photo-tile--new::after {
+    animation: none !important;
+  }
+
+  /* The quiz timer is information, not decoration. */
+  .timer-track span {
+    animation-duration: var(--timer-duration), 0s !important;
+    animation-delay: 0s, var(--timer-warn-at) !important;
+  }
+}

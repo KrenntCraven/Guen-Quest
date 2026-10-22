@@ -1,0 +1,84 @@
+/* ---------- Rewards: 3x3 photo tiles and stars ---------- */
+.photo-grid {
+  --photo-gap: 3px;
+  /* How far each tile's photo overlaps its neighbours; only gap-free grids use it, to hide seams. */
+  --photo-bleed: 0px;
+
+  display: grid;
+  width: 100%;
+  aspect-ratio: var(--photo-aspect);
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: var(--photo-gap);
+  overflow: hidden;
+  border-radius: var(--radius-md);
+  background: var(--color-border);
+}
+
+.photo-tile {
+  position: relative;
+  display: grid;
+  place-items: center;
+  background-color: var(--color-surface-mist);
+  color: var(--color-accent);
+  font-size: 1.3rem;
+}
+
+.photo-tile:not(.photo-tile--revealed) {
+  background-image: linear-gradient(160deg, var(--lavender-mist), var(--purple-100));
+}
+
+/* The window clips, not the tile, so a new tile's outer glow isn't cut off. */
+.photo-tile__window {
+  --tile: calc(100% - 2 * var(--photo-bleed));
+
+  position: absolute;
+  inset: calc(var(--photo-bleed) * -1);
+  overflow: hidden;
+}
+
+/* Each tile shows its own slice of one grid-sized copy of the photo, cropped to cover the grid like
+   `object-fit: cover`, so the picture never stretches whatever the grid's shape or the photo's size. */
+.photo-tile__image {
+  position: absolute;
+  top: calc(var(--row) * -1 * (var(--tile) + var(--photo-gap)) + var(--photo-bleed));
+  left: calc(var(--col) * -1 * (var(--tile) + var(--photo-gap)) + var(--photo-bleed));
+  width: calc(3 * var(--tile) + 2 * var(--photo-gap));
+  height: calc(3 * var(--tile) + 2 * var(--photo-gap));
+  background-position: center;
+  background-size: cover;
+}
+
+.photo-tile--new {
+  z-index: 1;
+}
+
+.photo-tile--new::after {
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 3px var(--lavender), 0 0 22px rgb(107 79 176 / 40%);
+  content: "";
+  animation: tile-glow 2.4s 1s ease-in-out infinite;
+}
+
+@keyframes tile-glow {
+  50% { opacity: 0.35; }
+}
+
+/* Stars */
+.star-row {
+  display: inline-flex;
+  gap: 0.1rem;
+}
+
+.star {
+  color: var(--color-star-empty);
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
+.star--earned {
+  color: var(--color-star);
+  text-shadow: 0 1px 0 var(--gold-600);
+}

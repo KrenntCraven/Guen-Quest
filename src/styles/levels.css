@@ -1,0 +1,309 @@
+/* ---------- Level map ---------- */
+.map-screen {
+  padding-block: max(1.5rem, env(safe-area-inset-top)) max(3rem, env(safe-area-inset-bottom));
+}
+
+/* On phones the aside dissolves so the order reads: photo, journey, final surprise, reset. */
+.map-layout {
+  display: flex;
+  width: min(100%, 36rem);
+  flex-direction: column;
+  margin-inline: auto;
+}
+
+.map-aside {
+  display: contents;
+}
+
+.map-layout .finale-button {
+  order: 1;
+}
+
+.map-layout > .text-button {
+  order: 2;
+}
+
+.game-header,
+.section-heading,
+.quiz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.game-header {
+  gap: 0.85rem;
+  margin-bottom: 1.5rem;
+}
+
+.game-header__title {
+  flex: 1;
+  min-width: 0;
+}
+
+.game-header .eyebrow {
+  margin-bottom: 0.2rem;
+}
+
+.game-header h1 {
+  font-size: 2.6rem;
+  line-height: 1;
+}
+
+.score-chip {
+  display: flex;
+  min-width: 88px;
+  padding: 0.55rem 0.95rem;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+  text-align: right;
+}
+
+.score-chip span {
+  color: var(--color-text-muted);
+  font-size: var(--text-label);
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.score-chip strong {
+  color: var(--color-primary);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.photo-card,
+.level-section {
+  padding: 1.25rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-md);
+}
+
+.photo-card {
+  margin-bottom: 1.25rem;
+}
+
+.section-heading {
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.section-heading .eyebrow {
+  margin-bottom: 0.2rem;
+}
+
+.lily-badge {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--color-surface-mist);
+}
+
+/* Winding path */
+.level-section {
+  padding-bottom: 1.5rem;
+}
+
+.level-path {
+  position: relative;
+  container-type: inline-size;
+}
+
+.path-trail {
+  position: absolute;
+  top: 0;
+  left: 32px;
+  width: calc(100% - 64px);
+  height: 100%;
+  overflow: visible;
+}
+
+.path-trail path {
+  fill: none;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.path-trail__base {
+  stroke: var(--lavender-mist);
+  stroke-width: 14px;
+}
+
+.path-trail__progress {
+  stroke: var(--lavender);
+  stroke-width: 6px;
+}
+
+.level-row {
+  position: relative;
+}
+
+.level-node {
+  position: absolute;
+  top: 50%;
+  left: calc(var(--x) * (100% - 64px));
+  display: flex;
+  min-height: 64px;
+  padding: 0;
+  align-items: center;
+  gap: 0.7rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-text);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.level-node--label-left {
+  right: calc((1 - var(--x)) * (100% - 64px));
+  left: auto;
+  flex-direction: row-reverse;
+  text-align: right;
+}
+
+.node-number {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 64px;
+  height: 64px;
+  flex: 0 0 64px;
+  place-items: center;
+  border: 4px solid var(--white);
+  border-radius: 50%;
+  color: var(--white);
+  background: var(--color-primary);
+  box-shadow: 0 5px 0 var(--color-primary-deep), 0 12px 22px rgb(61 42 110 / 22%);
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 600;
+}
+
+.level-node:not(:disabled):hover .node-number {
+  filter: brightness(1.06);
+}
+
+.level-node:focus-visible {
+  outline: none;
+}
+
+.level-node:focus-visible .node-number {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 4px;
+}
+
+.node-info {
+  display: flex;
+  max-width: calc((1 - var(--x)) * (100cqw - 64px) - 0.7rem);
+  flex-direction: column;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: 14px;
+  background: var(--color-surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.level-node--label-left .node-info {
+  max-width: calc(var(--x) * (100cqw - 64px) - 0.7rem);
+  align-items: flex-end;
+}
+
+.node-info strong {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.node-status {
+  color: var(--color-primary);
+  font-size: var(--text-label);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* Map avatar: positioned by --bx (0–1 along the path width), --bs (side offset, px) and --by (px),
+   so hopping never triggers layout. */
+.map-bunny {
+  position: absolute;
+  top: 0;
+  left: 32px;
+  z-index: 3;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  transform: translate(
+    calc(var(--bx, 0) * (100cqw - 64px) + var(--bs, 0) * 1px),
+    calc(var(--by, 0) * 1px)
+  );
+}
+
+.map-bunny__body {
+  position: absolute;
+  bottom: -34px;
+  left: -22px;
+  transform-origin: 50% 100%;
+}
+
+.map-bunny__figure {
+  display: block;
+  filter: drop-shadow(0 3px 4px rgb(61 42 110 / 22%));
+  transform-origin: 50% 100%;
+  animation: map-bunny-idle 2.6s ease-in-out infinite;
+}
+
+@keyframes map-bunny-idle {
+  50% { transform: translateY(-2px) scaleY(1.03); }
+}
+
+.node-pulse {
+  position: absolute;
+  inset: -8px;
+  border: 3px solid var(--color-accent);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.level-node--completed .node-number {
+  background: var(--violet-soft);
+  box-shadow: 0 5px 0 var(--color-primary-strong), 0 10px 18px rgb(61 42 110 / 16%);
+}
+
+.level-node--locked {
+  cursor: not-allowed;
+}
+
+.level-node--locked .node-number {
+  color: var(--color-locked-text);
+  background: var(--color-locked);
+  box-shadow: 0 4px 0 #e2d8f2;
+}
+
+.level-node--locked .node-info {
+  border-color: transparent;
+  background: rgb(255 255 255 / 70%);
+  box-shadow: none;
+}
+
+.level-node--locked .node-info strong,
+.level-node--locked .node-status {
+  color: var(--color-locked-text);
+}
+
+.finale-button {
+  margin-top: 1.5rem;
+}

@@ -1,0 +1,455 @@
+/* ---------- Intro: greeting + 3D bunny and lily ---------- */
+.intro {
+  --intro-ink: var(--ink);
+  --intro-purple: var(--violet);
+  --intro-purple-strong: var(--violet-strong);
+  --intro-lavender: var(--lavender);
+  --intro-muted: var(--color-text-muted);
+  --intro-pad: 1.5rem;
+  --pad-x: var(--intro-pad);
+
+  display: grid;
+  min-height: 100svh;
+  padding-block: max(1.25rem, calc(env(safe-area-inset-top) + 0.75rem)) max(1.5rem, env(safe-area-inset-bottom));
+  grid-template-areas:
+    "top"
+    "copy"
+    "stage"
+    "actions";
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  color: var(--intro-ink);
+  background: var(--color-background);
+}
+
+.intro-top {
+  display: flex;
+  grid-area: top;
+  align-items: center;
+  gap: 0.7rem;
+  color: var(--intro-muted);
+  font-size: var(--text-label);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.intro-top__level {
+  padding: 0.3rem 0.65rem 0.3rem 0.75rem;
+  border-radius: var(--radius-pill);
+  color: var(--intro-purple);
+  background: var(--color-surface-soft);
+  font-weight: 800;
+}
+
+.intro-copy {
+  grid-area: copy;
+  margin-top: clamp(1.75rem, 6svh, 3rem);
+}
+
+.intro-greeting {
+  margin-bottom: 0.5rem;
+  color: var(--intro-purple);
+  font-family: var(--font-rounded);
+  font-size: 1.3rem;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+}
+
+.intro-headline {
+  display: flex;
+  flex-direction: column;
+  color: var(--intro-ink);
+  font-family: var(--font-rounded);
+  font-size: clamp(2.7rem, 13vw, 3.7rem);
+  font-weight: 600;
+  line-height: 0.98;
+  letter-spacing: -0.025em;
+}
+
+/* Each headline word rises out of its own clipped line; the padding keeps descenders (y) unclipped. */
+.intro-line {
+  display: block;
+  overflow: clip;
+  padding-block: 0.04em 0.16em;
+  margin-block: -0.04em -0.16em;
+}
+
+.intro-line > span {
+  display: block;
+}
+
+.intro-headline__stop {
+  display: inline-block;
+  color: var(--intro-purple);
+  transform-origin: 50% 85%;
+}
+
+.intro-message {
+  margin-top: 0.85rem;
+  color: var(--intro-muted);
+  font-size: 1.05rem;
+  line-height: 1.45;
+}
+
+.intro-invite {
+  margin-top: 1.1rem;
+  color: var(--intro-ink);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.45;
+  text-wrap: balance;
+}
+
+.intro-invite__ask {
+  display: inline-block;
+  color: var(--intro-purple);
+}
+
+/* Ambience sits behind everything (including the stage's soft circle) and never takes input. */
+.intro-ambience-layer,
+.intro-ambience {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.intro-sprig {
+  position: absolute;
+  opacity: 0.85;
+}
+
+.intro-sprig svg {
+  display: block;
+}
+
+.intro-sprig--wisteria {
+  top: 0;
+  right: 0;
+  transform-origin: 100% 0;
+}
+
+.intro-sprig--bellflower {
+  bottom: calc(max(1.5rem, env(safe-area-inset-bottom)) + 84px);
+  left: -6px;
+  opacity: 0.75;
+  transform-origin: 26% 100%;
+}
+
+.intro-stage {
+  position: relative;
+  grid-area: stage;
+  min-height: 280px;
+  margin-inline: calc(var(--intro-pad) * -1);
+}
+
+.intro-stage::before {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  z-index: -1;
+  height: min(86%, 80vw, 360px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-surface-soft);
+  content: "";
+  translate: -50% 0;
+}
+
+.bunny-stage {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  outline: none;
+}
+
+.bunny-stage:focus-visible {
+  outline: 3px solid var(--intro-lavender);
+  outline-offset: -6px;
+}
+
+.bunny-stage--fallback {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 12%;
+}
+
+.bunny-stage--fallback .story-bunny {
+  width: min(80%, 320px);
+}
+
+.bunny-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  opacity: 0;
+  touch-action: pan-y;
+  transition: opacity 400ms ease;
+}
+
+.bunny-canvas.is-ready {
+  opacity: 1;
+}
+
+.bunny-canvas.is-dragging {
+  cursor: grabbing;
+}
+
+.story-bunny {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.intro-hint {
+  position: absolute;
+  right: 0;
+  bottom: 2%;
+  left: 0;
+  color: var(--intro-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-align: center;
+  pointer-events: none;
+}
+
+.intro-actions {
+  display: flex;
+  grid-area: actions;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.intro-button {
+  display: inline-flex;
+  min-height: 56px;
+  width: min(100%, 22rem);
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 0 1.75rem;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: #fff;
+  background: var(--intro-purple);
+  box-shadow: 0 10px 24px rgb(107 79 176 / 24%);
+  font-size: 1.02rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  transition: background-color 200ms ease, box-shadow 200ms ease;
+}
+
+.intro-button:hover {
+  background: var(--intro-purple-strong);
+  box-shadow: 0 14px 30px rgb(107 79 176 / 30%);
+}
+
+.intro-button:focus-visible {
+  outline: 3px solid var(--intro-lavender);
+  outline-offset: 4px;
+}
+
+/* Motion owns the bunny's transform (its nudge hop), so hover uses the separate `translate` property. */
+.intro-button__bunny {
+  display: inline-flex;
+  margin-top: -4px;
+  margin-left: -0.35rem;
+  transition: translate 200ms ease;
+}
+
+.intro-button:hover .intro-button__bunny {
+  translate: 0 -3px;
+}
+
+@media (max-height: 680px) {
+  .intro-copy {
+    margin-top: 0.9rem;
+  }
+
+  .intro-greeting {
+    font-size: 1.1rem;
+  }
+
+  .intro-headline {
+    font-size: clamp(2.1rem, 10vw, 2.7rem);
+  }
+
+  .intro-message {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .intro-invite {
+    margin-top: 0.6rem;
+    font-size: 1rem;
+  }
+
+  .intro-sprig--wisteria {
+    scale: 0.8;
+  }
+
+  .intro-stage {
+    min-height: 220px;
+  }
+}
+
+/* Portrait tablets: same stacked story, scaled up so the copy and stage fill the taller page. */
+@media (orientation: portrait) and (min-width: 600px) {
+  .intro {
+    --intro-pad: clamp(2rem, 6vw, 3.5rem);
+  }
+
+  .intro-copy {
+    margin-top: clamp(2.5rem, 5svh, 4rem);
+  }
+
+  .intro-greeting {
+    font-size: 1.6rem;
+  }
+
+  .intro-headline {
+    font-size: clamp(4rem, 10vw, 5.6rem);
+  }
+
+  .intro-message,
+  .intro-invite {
+    font-size: 1.2rem;
+  }
+
+  .intro-stage::before {
+    height: min(80%, 62vw, 540px);
+  }
+
+  .intro-sprig {
+    scale: 1.35;
+  }
+}
+
+/* Landscape (phones turned sideways through desktop): copy on the left, the 3D scene on the right. */
+@media (orientation: landscape) and (min-width: 560px) {
+  .intro {
+    --intro-pad: clamp(2rem, 6vw, 6rem);
+
+    padding-block: 2.5rem;
+    column-gap: 2rem;
+    grid-template-areas:
+      "top stage"
+      ". stage"
+      "copy stage"
+      "actions stage"
+      ". stage";
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    grid-template-rows: auto 1fr auto auto 1.2fr;
+  }
+
+  .intro-copy {
+    margin-top: 0;
+  }
+
+  .intro-greeting {
+    font-size: 1.6rem;
+  }
+
+  .intro-headline {
+    font-size: clamp(3.2rem, 5.6vw, 5.4rem);
+  }
+
+  .intro-message,
+  .intro-invite {
+    font-size: 1.15rem;
+  }
+
+  .intro-stage {
+    min-height: 0;
+    margin: -2.5rem calc(var(--intro-pad) * -1) -2.5rem 0;
+  }
+
+  .intro-stage::before {
+    height: min(76%, 38vw, 540px);
+    bottom: 12%;
+  }
+
+  .intro-sprig {
+    scale: 1.35;
+  }
+
+  .intro-actions {
+    margin-top: 2.25rem;
+    align-items: flex-start;
+  }
+
+  .intro-button {
+    width: auto;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .intro {
+    padding-block: max(1rem, env(safe-area-inset-top)) max(1rem, env(safe-area-inset-bottom));
+    column-gap: 1.25rem;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  }
+
+  .intro-top,
+  .intro-button {
+    white-space: nowrap;
+  }
+
+  .intro-greeting {
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+  }
+
+  .intro-headline {
+    font-size: clamp(2rem, 6vw, 2.6rem);
+  }
+
+  .intro-message {
+    margin-top: 0.4rem;
+    font-size: 1rem;
+  }
+
+  .intro-invite {
+    margin-top: 0.5rem;
+    font-size: 1rem;
+  }
+
+  .intro-actions {
+    margin-top: 1rem;
+  }
+
+  .intro-stage {
+    margin-block: -1rem;
+  }
+
+  .intro-sprig {
+    scale: 0.9;
+  }
+}
+
+/* Wide monitors: keep the story in a centred frame instead of pinning the copy to the far left edge. */
+@media (orientation: landscape) and (min-width: 1440px) {
+  .intro {
+    padding-inline: max(var(--intro-pad), calc((100% - 84rem) / 2));
+  }
+
+  .intro-headline {
+    font-size: clamp(5.4rem, 4.6vw, 6.4rem);
+  }
+
+  .intro-greeting {
+    font-size: 1.8rem;
+  }
+
+  .intro-message,
+  .intro-invite {
+    font-size: 1.25rem;
+  }
+}
